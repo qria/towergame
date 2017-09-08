@@ -19,3 +19,8 @@ h1 {
 .container {
 	margin: 100px 50px;
 }
+
+.gameover {
+	color: red;
+	font-size: 50pt;
+}

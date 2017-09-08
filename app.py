@@ -3,7 +3,7 @@ import enum
 from typing import Callable, Optional
 import os
 
-from flask import Flask, redirect, render_template, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for
 
 
 app = Flask(__name__)
@@ -44,11 +44,19 @@ def last_place() -> Optional[str]:
 @app.before_request
 def reset():
     """ If session history does not exist, reset game """
-    if session.get('history') is None:
+    if request.path.startswith('/static/'):
+        # Exclude static resources
+        return
+    if session.get('history') is None or session.get('gameover'):
         # Basic session setup
         session.permanent = True
+        session['gameover'] = False
         session['history'] = []
+        session.modified = True
         return redirect(url_for('index'))
+    if len(session['history']) == 0 and request.path not in ('/', '/index.htm', '/frontdoor.htm'):
+        # Only allow index and frontdoor when starting the game
+        return redirect(url_for('frontdoor'))
 
 
 @app.route('/')
@@ -64,7 +72,8 @@ def index():
 @register_place('frontdoor')
 def frontdoor():
     if last_place() == 'secondfloor':
-        return 'death'
+        session['gameover'] = True
+        return render_template('felloff.html')
     return render_template('frontdoor.html')
 
 
@@ -77,4 +86,12 @@ def firstfloor():
 @app.route('/secondfloor.htm')
 @register_place('secondfloor')
 def secondfloor():
+    if last_place() == 'frontdoor':
+        return render_template('secondfloor_climbed.html')
     return render_template('secondfloor.html')
+
+
+@app.route('/window.htm')
+@register_place('thirdfloor')
+def thirdfloor():
+    return render_template('thirdfloor.html')

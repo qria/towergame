@@ -1,0 +1,21 @@
+@import url(//cdnjs.cloudflare.com/ajax/libs/spoqa-han-sans/2.1.1/css/SpoqaHanSans-kr.min.css);
+
+body {
+	background-color: black;
+}
+
+* {
+    color: rgb(102, 204, 0);
+    font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Source Sans Pro', Apple SD Gothic Neo, Nanum Barun Gothic, Nanum Gothic, '돋움', Dotum, Verdana, Arial, sans-serif;
+    font-size: 20pt;
+    text-align: center;
+    line-height: 18px;
+}
+
+h1 {
+    font-size: 32pt;
+}
+
+.container {
+	margin: 100px 50px;
+}
